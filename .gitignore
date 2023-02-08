@@ -64,6 +64,7 @@ db.sqlite3-journal
 # Flask stuff:
 instance/
 .webassets-cache
+*.db
 
 # Scrapy stuff:
 .scrapy
@@ -109,6 +110,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.flaskenv
 
 # Spyder project settings
 .spyderproject
@@ -127,3 +129,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+.idea/
+

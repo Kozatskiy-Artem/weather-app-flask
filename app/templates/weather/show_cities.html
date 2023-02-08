@@ -1,0 +1,61 @@
+{% extends '_base.html' %}
+
+{% block title %}
+  {{ title }}
+{% endblock title %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Show cities in database</h1>
+</div>
+{% include 'messages.html' %}
+
+<div class="cities content-block">
+    <button type="button" class="btn btn-primary" id="selectButton" onclick="toggle()">Select all</button>
+    <button type="submit" class="btn btn-danger" form="userForm">Delete</button>
+    <hr>
+    {{ pagination.info }}
+    {{ pagination.links }}
+
+    <form action="{{ url_for('weather.delete_cities') }}" method="post" id="userForm">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <div class="table-responsive">
+            <table class="table table-hover " id="userTable">
+                <thead>
+                <tr>
+                    <th scope="col">Select</th>
+                    <th scope="col">#</th>
+                    <th scope="col">City name</th>
+                    <th scope="col">Country</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for city in cities %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="selectors" class="checkbox" value="{{ city.id }}"/>
+                        </td>
+                        <td>{{ loop.index + pagination.skip }}</td>
+                        <td>
+                            <a href="{{ url_for('weather.index', city_name=city.name) }}">
+                                {{ city.name }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="?country_name={{ city.country.name }}">
+                                 {{ city.country.name }}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </form>
+    <hr>
+    {{ pagination.info }}
+    {{ pagination.links }}
+
+</div>
+
+{% endblock page_content%}

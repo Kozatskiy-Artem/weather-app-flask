@@ -1,0 +1,83 @@
+{% extends '_base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+  {{ title }}
+{% endblock title %}
+
+{% block page_content %}
+    <div class="page-header">
+        <h1>Show weather info</h1>
+    </div>
+{% include 'messages.html' %}
+
+<div class="search content-block">
+    <form action="{{ url_for('weather.index') }}" method="POST" class="weather_form">
+        <div class="city">
+            {{ form.csrf_token }}
+            {{ wtf.form_field(form.city_name) }}
+        </div>
+        <div>
+            {{ wtf.form_field(form.submit) }}
+        </div>
+    </form>
+</div>
+
+{% if weather_data %}
+
+<div class="current content-block">
+    <div class="general">
+        <div id="city">
+            <h1 class="city_name">{{ city_name }}, {{ weather_data.country }}</h1>
+            <h1 class="date">{{ weather_data.day_week }}, {{ moment(date).format('MMMM Do YYYY') }}</h1>
+        </div>
+    </div>
+    <hr>
+    <div class="block_add">
+            <p class="text_for_add">Add the city to the database</p>
+            <form action="{{ url_for('weather.add_city') }}" method="post" id="userForm">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <input type="hidden" name="city" value="{{ city_name }}"/>
+                <input type="hidden" name="country" value="{{ country.id }}"/>
+                <button type="submit" class="add_city">Add city</button>
+            </form>
+    </div>
+    <hr>
+    <div class="degree">
+        <p id="sense">There is no bad weather, there are bad clothes)</p>
+        <h1 class="temperature">{{ weather_data.temperature }}°C</h1>
+    </div>
+    <hr>
+    <div class="weather_info">
+        <div class="icon">
+            <img src="{{ weather_data.icon_url }}" alt="weather_icon" id="icon_img">
+        </div>
+        <div class=" precipitation">
+            <div class="weather_data">
+                <p>
+                    {{ weather_data.sky }}<br />
+                    Humidity: {{ weather_data.humidity }}%<br />
+                    Wind: {{ weather_data.wind_speed }} m/s<br />
+                    Pressure: {{ weather_data.pressure }} hPa
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="forecast content-block">
+    {% for day in range(1, 6) %}
+    <div class="days">
+        <p>{{forecast_data[day].day_week }}</p>
+        <img src="{{ forecast_data[day].icon_url }}" width="42">
+        <div>
+            <span>{{ forecast_data[day].temp_max }}°</span>
+            <span class="forecast-temp-min">{{ forecast_data[day].temp_min }}°</span>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endif %}
+
+{% endblock page_content %}

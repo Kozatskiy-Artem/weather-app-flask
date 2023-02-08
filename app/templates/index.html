@@ -1,0 +1,62 @@
+{% extends '_base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block page_content %}
+<div class="home content-block text-center">
+  <div class="page-header">
+    <h1>
+      Hello,
+      {% if current_user.is_authenticated %}
+        {{ current_user.name }}!
+      {% else %}
+        Anonymous
+      {% endif %}<br>
+      Welcome to my web application.
+    </h1>
+  </div>
+
+  <h2> On the pages of my web application you can: <br></h2>
+  <hr>
+  {% if not current_user.is_authenticated %}
+    <p>
+      <a href="{{ url_for('auth.register') }}">Register</a> and/or <a href="{{ url_for('auth.login') }}">log in</a>;
+    </p>
+    <hr>
+  {% endif %}
+  <p>
+    Generate test random data (full name and email), which will be entered into the database,
+    then you can view them on the
+    "<a href="{{ url_for('main.show_test_data') }}"> Test data</a>" page in the form of a table with pagination,
+    change the data or delete it from the database;
+  </p>
+  <hr>
+  <p>
+    Enter the name of the city on the
+    "<a href="{{ url_for('weather.index') }}"> Weather</a>" page to get the current weather in this city, add the city
+    to the database and view the weather forecast for the next five days;
+  </p>
+  <hr>
+  <p>
+    View the cities and their countries added to the database on the
+    "<a href="{{ url_for('weather.show_cities') }}"> Cities</a>" page, get a selection of cities
+    by country, or get a weather forecast by city;
+  </p>
+  <hr>
+  <h3>Generate test data</h3>
+  {% include 'messages.html' %}
+  <form action="{{ url_for('main.index') }}" method="post">
+    {{ form.csrf_token }}
+    {{ wtf.form_field(form.submit) }}
+  </form>
+  <hr>
+
+  <p>The local date and time is {{ moment(current_time).format('MMMM Do YYYY, H:mm:ss') }}.</p>
+  <p>That was {{ moment(current_time).fromNow(refresh=True) }}</p>
+
+</div>
+
+{% endblock page_content %}
